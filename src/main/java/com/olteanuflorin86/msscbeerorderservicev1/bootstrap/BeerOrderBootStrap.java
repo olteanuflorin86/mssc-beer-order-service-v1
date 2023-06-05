@@ -1,5 +1,6 @@
 package com.olteanuflorin86.msscbeerorderservicev1.bootstrap;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.boot.CommandLineRunner;
@@ -9,7 +10,9 @@ import com.olteanuflorin86.msscbeerorderservicev1.domain.Customer;
 import com.olteanuflorin86.msscbeerorderservicev1.repositories.CustomerRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class BeerOrderBootStrap implements CommandLineRunner {
@@ -27,10 +30,14 @@ public class BeerOrderBootStrap implements CommandLineRunner {
 	
 	private void loadCustomerData() {
 		if (customerRepository.count() == 0) {
-			customerRepository.save(Customer.builder()
+			Customer savedCustomer = customerRepository.save(Customer.builder()
 				.customerName(TASTING_ROOM)
 				.apiKey(UUID.randomUUID())
 				.build());
+		
+		log.info("Tasting Room Customer Id " + savedCustomer.getId().toString());
+//		System.out.println("Tasting Room Customer Id " + savedCustomer.getId().toString());
+
 		}
 	}
 }

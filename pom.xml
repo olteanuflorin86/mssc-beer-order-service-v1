@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.olteanuflorin86</groupId>
-		<artifactId>mssc-brewery-bom-v1</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<groupId>com.github.sfg-beer-works</groupId>
+		<artifactId>sfg-brewery-bom</artifactId>
+		<version>1.0.3</version>
 	</parent>
 	<groupId>com.olteanuflorin86</groupId>
 	<artifactId>mssc-beer-order-service-v1</artifactId>
@@ -14,6 +14,7 @@
 	<description>Spring Boot Beer Order Microservice</description>
 
 	<dependencies>
+		<!--  
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
@@ -29,6 +30,7 @@
 			<artifactId>jaxb-impl</artifactId>
 			<version>${jaxb.version}</version>
 		</dependency>
+		-->
 	</dependencies>
 
 </project>

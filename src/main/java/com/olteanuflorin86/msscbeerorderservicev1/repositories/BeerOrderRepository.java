@@ -13,14 +13,14 @@ import org.springframework.stereotype.Repository;
 
 import com.olteanuflorin86.msscbeerorderservicev1.domain.BeerOrder;
 import com.olteanuflorin86.msscbeerorderservicev1.domain.Customer;
-import com.olteanuflorin86.msscbeerorderservicev1.domain.OrderStatusEnum;
+import com.olteanuflorin86.msscbeerorderservicev1.domain.BeerOrderStatusEnum;
 
 @Repository
 public interface BeerOrderRepository extends JpaRepository<BeerOrder, UUID> {
 
 	Page<BeerOrder> findAllByCustomer(Customer customer, Pageable pageable);
 	
-	List<BeerOrder> findAllByOrderStatus(OrderStatusEnum orderStatusEnum);
+	List<BeerOrder> findAllByOrderStatus(BeerOrderStatusEnum orderStatusEnum);
 	
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	BeerOrder findOneById(UUID id);

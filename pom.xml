@@ -14,6 +14,7 @@
 	<description>Spring Boot Beer Order Microservice</description>
 
 	<dependencies>
+
 		<!--  
 		<dependency>
 			<groupId>javax.xml.bind</groupId>

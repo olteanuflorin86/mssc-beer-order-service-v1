@@ -12,6 +12,7 @@ import com.olteanuflorin86.msscbeerorderservicev1.domain.BeerOrder;
 import com.olteanuflorin86.msscbeerorderservicev1.domain.BeerOrderEventEnum;
 import com.olteanuflorin86.msscbeerorderservicev1.domain.BeerOrderStatusEnum;
 import com.olteanuflorin86.msscbeerorderservicev1.repositories.BeerOrderRepository;
+import com.olteanuflorin86.msscbeerorderservicev1.sm.BeerOrderStateChangeInterceptor;
 
 import lombok.RequiredArgsConstructor;
 

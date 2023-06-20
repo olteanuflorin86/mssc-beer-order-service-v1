@@ -1,6 +1,6 @@
 package com.olteanuflorin86.msscbeerorderservicev1.web.model;
 
-import java.time.OffsetDateTime; 
+import java.time.OffsetDateTime;  
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ public class BeerOrderDto extends BaseItem {
 	
 	@Builder
 	public BeerOrderDto(UUID id, Integer version, OffsetDateTime createdDate, OffsetDateTime lastModifiedDate,
-			UUID customerId, String customerRef, List<BeerOrderLineDto> beerOrderLines, OrderStatusEnum orderStatus, String orderStatusCallbackUrl) {
+			UUID customerId, String customerRef, List<BeerOrderLineDto> beerOrderLines, String orderStatus, String orderStatusCallbackUrl) {
 		super(id, version, createdDate, lastModifiedDate);
 		
 		this.customerId = customerId;
@@ -33,6 +33,6 @@ public class BeerOrderDto extends BaseItem {
 	private UUID customerId;
 	private String customerRef;
 	private List<BeerOrderLineDto> beerOrderLines;
-	private OrderStatusEnum orderStatus;
+	private String orderStatus;
 	private String orderStatusCallbackUrl;
 }

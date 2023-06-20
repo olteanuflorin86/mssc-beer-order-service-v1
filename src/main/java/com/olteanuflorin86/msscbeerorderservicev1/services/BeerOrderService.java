@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Pageable;
 
-import com.olteanuflorin86.msscbeerorderservicev1.web.model.BeerOrderDto;
-import com.olteanuflorin86.msscbeerorderservicev1.web.model.BeerOrderPagedList;
+import com.olteanuflorin86.brewery.model.BeerOrderDto;
+import com.olteanuflorin86.brewery.model.BeerOrderPagedList;
 
 public interface BeerOrderService {
 

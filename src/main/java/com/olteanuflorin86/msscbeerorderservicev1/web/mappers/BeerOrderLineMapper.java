@@ -3,8 +3,8 @@ package com.olteanuflorin86.msscbeerorderservicev1.web.mappers;
 import org.mapstruct.DecoratedWith; 
 import org.mapstruct.Mapper;
 
+import com.olteanuflorin86.brewery.model.BeerOrderLineDto;
 import com.olteanuflorin86.msscbeerorderservicev1.domain.BeerOrderLine;
-import com.olteanuflorin86.msscbeerorderservicev1.web.model.BeerOrderLineDto;
 
 @Mapper(uses = {DateMapper.class})
 @DecoratedWith(BeerOrderLineMapperDecorator.class)

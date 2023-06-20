@@ -1,4 +1,4 @@
-package com.olteanuflorin86.msscbeerorderservicev1.web.model;
+package com.olteanuflorin86.brewery.model;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

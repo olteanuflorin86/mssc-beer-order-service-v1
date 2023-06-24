@@ -1,5 +1,6 @@
 package com.olteanuflorin86.msscbeerorderservicev1.sm.actions;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.jms.core.JmsTemplate;
@@ -31,12 +32,16 @@ public class ValidateOrderAction implements Action<BeerOrderStatusEnum, BeerOrde
     @Override
     public void execute(StateContext<BeerOrderStatusEnum, BeerOrderEventEnum> context) {
         String beerOrderId = (String) context.getMessage().getHeaders().get(BeerOrderManagerImpl.ORDER_ID_HEADER);
-        BeerOrder beerOrder = beerOrderRepository.findOneById(UUID.fromString(beerOrderId));
+        
+        Optional<BeerOrder> beerOrderOpional = beerOrderRepository.findById(UUID.fromString(beerOrderId));
 
-        jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_QUEUE, ValidateOrderRequest.builder()
-                    .beerOrder(beerOrderMapper.beerOrderToDto(beerOrder))
-                    .build());
-
-        log.debug("Sent Validation request to queue for order id " + beerOrderId);
-    }
+        beerOrderOpional.ifPresentOrElse(beerOrder -> {
+        	jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_QUEUE, ValidateOrderRequest.builder()
+        			.beerOrder(beerOrderMapper.beerOrderToDto(beerOrder))
+        			.build());
+        	
+        }, () -> log.error("Order Not Found. Id: " + beerOrderId));
+    
+    log.debug("Sent Validation request to queue for order id " + beerOrderId);
+	}
 }

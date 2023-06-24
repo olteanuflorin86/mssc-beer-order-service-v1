@@ -1,7 +1,14 @@
 package com.olteanuflorin86.msscbeerorderservicev1.services;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;  
 import static org.junit.Assert.assertNotNull;
+
+import static com.github.jenspiegsa.wiremockextension.ManagedWireMockServer.with;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+
+import static org.awaitility.Awaitility.await;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,16 +16,26 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.jenspiegsa.wiremockextension.WireMockExtension;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.olteanuflorin86.brewery.model.BeerDto;
 import com.olteanuflorin86.msscbeerorderservicev1.domain.BeerOrder;
 import com.olteanuflorin86.msscbeerorderservicev1.domain.BeerOrderLine;
 import com.olteanuflorin86.msscbeerorderservicev1.domain.BeerOrderStatusEnum;
 import com.olteanuflorin86.msscbeerorderservicev1.domain.Customer;
 import com.olteanuflorin86.msscbeerorderservicev1.repositories.BeerOrderRepository;
 import com.olteanuflorin86.msscbeerorderservicev1.repositories.CustomerRepository;
+import com.olteanuflorin86.msscbeerorderservicev1.services.beer.BeerServiceImpl;
 
+@ExtendWith(WireMockExtension.class)
 @SpringBootTest
 public class BeerOrderManagerImplIT {
 
@@ -31,9 +48,26 @@ public class BeerOrderManagerImplIT {
 	@Autowired
 	CustomerRepository customerRepository;
 	
+	@Autowired
+	WireMockServer wireMockServer;
+	
+	@Autowired
+	ObjectMapper objectMapper;
+	
 	Customer testCustomer;
 	
 	UUID beerId = UUID.randomUUID();
+	
+	@TestConfiguration
+	static class RestTemplateBuilderProvider {
+		
+		@Bean(destroyMethod = "stop")
+		public WireMockServer wireMockServer() {
+			WireMockServer server = with(wireMockConfig().port(8083));
+			server.start();
+			return server;
+		}
+	}
 	
 	@BeforeEach
 	void setUp() {
@@ -43,10 +77,22 @@ public class BeerOrderManagerImplIT {
 	}
 	
 	@Test
-	void testNewToAllocated() {
+	void testNewToAllocated() throws JsonProcessingException {
+		BeerDto beerDto = BeerDto.builder().id(beerId).upc("12345").build();
+		
+		wireMockServer.stubFor(get(BeerServiceImpl.BEER_UPC_PATH_V1 + "12345")
+		.willReturn(okJson(objectMapper.writeValueAsString(beerDto))));
+		
 		BeerOrder beerOrder = createBeerOrder();
 		
 		BeerOrder savedBeerOrder = beerOrderManager.newBeerOrder(beerOrder);
+		
+		await().untilAsserted(() -> {
+            BeerOrder foundOrder = beerOrderRepository.findById(beerOrder.getId()).get();
+
+            //todo - ALLOCATED STATUS
+            assertEquals(BeerOrderStatusEnum.ALLOCATION_PENDING, foundOrder.getOrderStatus());
+        });
 		
 		assertNotNull(savedBeerOrder);
 		assertEquals(BeerOrderStatusEnum.ALLOCATED, savedBeerOrder.getOrderStatus());
